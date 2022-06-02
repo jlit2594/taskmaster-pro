@@ -120,6 +120,73 @@ $(".list-group").on("blur", "input[type='text']", function() {
   $(this).replaceWith(taskSpan);
 });
 
+$(".card .list-group").sortable({
+  connectWith: $(".card .list-group"),
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
+  activate: function(event) {
+    // console.log("activiate", this);
+  },
+
+  deactivate: function(event) {
+    // console.log("deactivate", this);
+  },
+
+  over: function(event) {
+    // console.log("over", event.target);
+  },
+
+  out: function(event) {
+    // console.log("out", event.target);
+  },
+  
+  update: function(event) {
+    var tempArr = [];
+
+    $(this).children().each(function() {
+      let text = $(this)
+      .find("p")
+      .text()
+      .trim();
+
+      let date = $(this)
+      .find("span")
+      .text()
+      .trim();
+
+      tempArr.push({
+        text: text,
+        date: date
+      });
+    });
+
+    let arrName = $(this)
+    .attr("id")
+    .replace("list-", "");
+
+    tasks[arrName] = tempArr;
+    saveTasks();
+
+    console.log(tempArr);
+  }
+});
+
+$("#trash").droppable({
+  accept: ".card .list-group-item",
+  tolerance: "touch",
+  drop: function(event, ui) {
+    ui.draggable.remove();
+    console.log("drop");
+  },
+
+  over: function(event, ui) {
+    console.log("over");
+  },
+  out: function(event, ui) {
+    console.log("out");
+  }
+});
 
 // modal was triggered
 $("#task-form-modal").on("show.bs.modal", function() {
